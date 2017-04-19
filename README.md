@@ -1,6 +1,6 @@
 HOW TO RUN MY FAVOURITE MOVIES (FRESH TOMATOES)
 
-Background
+Background: 
 I initially tried to add fade-out cinema curtains with an Adobe image I already owned, an introductory voice-over, and rearrange the video boxes into two rows of five, before settling to finalise this project with adding more videos to even out the rows, changing the hover highlight to bright red, and adding some extra information about each movie.  This activity has really inspired me to try and write such a web page on my own after the course.
 
 System requirements
