@@ -1,13 +1,19 @@
+import webbrowser
+import os
+import re
 
+# Styles and scripting for presentation and functioning of each section of the
+# page - head, body, and contents.
+main_page_head = '''
 <head>
     <meta charset="utf-8">
     <title>My Favourite Movies!</title>
 
     <!-- Bootstrap 3 -->
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">  # NOQA
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">  # NOQA
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>  # NOQA
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>  # NOQA
     <style type="text/css" media="screen">
         body {
             padding: 80px; 
@@ -51,16 +57,20 @@
     </style>
     <script type="text/javascript" charset="utf-8">
         // Pause the video when the modal is closed
-        $(document).on('click', '.hanging-close, .modal-backdrop, .modal', function (event) {
-            // Remove the src so the player itself gets removed, as this is the only
+        $(document).on('click', '.hanging-close, .modal-backdrop, .modal',
+        function (event) {
+            // Remove the src so the player itself gets removed, as this is the
+            only
             // reliable way to ensure the video stops playing in IE
             $("#trailer-video-container").empty();
         });
         // Start playing the video whenever the trailer modal is opened
         $(document).on('click', '.movie-tile', function (event) {
             var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
-            var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
-            $("#trailer-video-container").empty().append($("<iframe></iframe>", {
+            var sourceUrl = 'http://www.youtube.com/embed/' +
+            trailerYouTubeId +'?autoplay=1&html5=1';
+            $("#trailer-video-container").empty().append($("<iframe></iframe>",
+            {
               'id': 'trailer-video',
               'type': 'text-html',
               'src': sourceUrl,
@@ -75,7 +85,10 @@
         });
     </script>
 </head>
+'''
 
+# HTML for the main page layout and title bar
+main_page_content = '''
 <!DOCTYPE html>
 <html lang="en">
   <body>
@@ -83,8 +96,9 @@
     <div class="modal" id="trailer">
       <div class="modal-dialog">
         <div class="modal-content">
-          <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
-            <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>
+          <a href="#" class="hanging-close" data-dismiss="modal"
+          aria-hidden="true">
+            <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>  # NOQA
           </a>
           <div class="scale-media" id="trailer-video-container">
           </div>
@@ -94,160 +108,77 @@
     
     <!-- Main Page Content -->
      <div class="container">
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top"
+      role="navigation">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">My Favourite Movies' Trailers</a>
+            <a class="navbar-brand" href="#">My Favourite Movies'
+            Trailers</a>
           </div>
         </div>
       </div>
     </div>
     <div class="container">
-      
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="2w4pdDkYEAg" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/3/3c/TheInformant2009MP.jpg" width="220" height="342">
-    <h4>THE INFORMANT</h4>
-    <h4>(2009)</h4>
-    <p><b>79% Rotten Tomatoes</b></p>
-    <p><i>'Matt Damon is a delusional but brilliant white-collar criminal turned FBI mole!'</i></p>
-    <p><small>Paul Asay, Plugged In</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="imm6OR605UI" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/6/68/Ocean%27s_Eleven_2001_Poster.jpg" width="220" height="342">
-    <h4>OCEAN'S ELEVEN</h4>
-    <h4>(2001)</h4>
-    <p><b>82% Rotten Tomatoes</b></p>
-    <p><i>'Ocean's 11 is good old-fashioned Hollywood heist film fun.'</i></p>
-    <p><small>Nell Minow, Common Sense Media</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="9EpaMmF9WVU" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/e/e0/Chicagopostercast.jpg" width="220" height="342">
-    <h4>CHICAGO</h4>
-    <h4>(2002)</h4>
-    <p><b>86% Rotten Tomatoes</b></p>
-    <p><i>Chicago dazzles audiences with colour, action, and rip-roaring sound.</i></p>
-    <p><small>Lindy Keffer, Plugged In</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="4TLppsfzQH8" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/1/17/Limitless_Poster.jpg" width="220" height="342">
-    <h4>LIMITLESS</h4>
-    <h4>(2011)</h4>
-    <p><b>70% Rotten Tomatoes</b></p>
-    <p><i>'A loopy joy from start to finish, Bradley Cooper proves that he's the real deal.'</i></p>
-    <p><small>David Hughes, Empire</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="j2jRs4EAvWM" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/5/5e/The_Imitation_Game_poster.jpg" width="220" height="342">
-    <h4>THE IMITATION GAME</h4>
-    <h4>(2014)</h4>
-    <p><b>90% Rotten Tomatoes</b></p>
-    <p><i>'A crackling spy thriller dished out by experts.'</i></p>
-    <p><small>Peter Travers, Rolling Stone</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="DGpS0XgKuLk" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/3/3d/Liar_Liar_poster.JPG" width="220" height="342">
-    <h4>LIAR LIAR</h4>
-    <h4>(1997)</h4>
-    <p><b>81% Rotten Tomatoes</b></p>
-    <p><i>'I am gradually developing a suspicion that Jim Carrey is growing on me.'</i></p>
-    <p><small>Roger Ebert</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="CBVqI2P2L4A" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/0/09/Duplicity_film.jpg" width="220" height="342">
-    <h4>DUPLICITY</h4>
-    <h4>(2009)</h4>
-    <p><b>65% Rotten Tomatoes</b></p>
-    <p><i>'Duplicity is well-crafted, smart, and often funny.'</i></p>
-    <p><small>Critics' consensus, Rotten Tomatoes</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="VfAAafSOHG4" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/1/1a/His_Girl_Friday_poster.jpg" width="220" height="342">
-    <h4>HIS GIRL FRIDAY</h4>
-    <h4>(1940)</h4>
-    <p><b>98% Rotten Tomatoes</b></p>
-    <p><i>'A fast-talking screwball delight that remains the finest example of its genre.'</i></p>
-    <p><small>Colin Kennedy, Empire</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="vgqG3ITMv1Q" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/e/e3/The_Big_Short_teaser_poster.jpg" width="220" height="342">
-    <h4>THE BIG SHORT</h4>
-    <h4>(2015)</h4>
-    <p><b>88% Rotten Tomatoes</b></p>
-    <p><i>'Witty, absurd and far more entertaining than it has any right to be.'</i></p>
-    <p><small>Helen O'Hara, Empire</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="XTDSwAxlNhc" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/e/e7/The_Devil_Wears_Prada_main_onesheet.jpg" width="220" height="342">
-    <h4>THE DEVIL WEARS PRADA</h4>
-    <h4>(2006)</h4>
-    <p><b>76% Rotten Tomatoes</b></p>
-    <p><i>'Fun frothy fashion tale.'</i></p>
-    <p><small>Cynthia Fuchs, Common Sense Media</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="rGlsxVfCSyQ" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/7/76/Unbroken_poster.jpg" width="220" height="342">
-    <h4>UNBROKEN</h4>
-    <h4>(2014)</h4>
-    <p><b>51% Rotten Tomatoes</b></p>
-    <p><i>'A movie about forgiveness and enduring the unendurable.'</i></p>
-    <p><small>Rotten Tomatoes</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="71rDQ7z4eFg" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/4/4d/Catch_Me_If_You_Can_2002_movie.jpg" width="220" height="342">
-    <h4>CATCH ME IF YOU CAN</h4>
-    <h4>(2002)</h4>
-    <p><b>96% Rotten Tomatoes</b></p>
-    <p><i>'Frank Abagnale not only forges cheques, he forges lives.'</i></p>
-    <p><small>Loren Eaton, Plugged In</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="rRHRa80wVq8" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/a/a6/Charlies_Angels_%282000%29_Poster.jpg" width="220" height="342">
-    <h4>CHARLIES ANGELS</h4>
-    <h4>(2000)</h4>
-    <p><b>68% Rotten Tomatoes</b></p>
-    <p><i>'Edgy girl power fun.'</i></p>
-    <p><small>Nell Minow, Common Sense Media</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="K9WNBO3szgQ" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Getsmart08.png" width="220" height="342">
-    <h4>GET SMART</h4>
-    <h4>(2008)</h4>
-    <p><b>51% Rotten Tomatoes</b></p>
-    <p><i>'You could quibble about the movie's uneven plot, but don't let that get in the way of agood time.'</i></p>
-    <p><small>S. Jhoanna Robledo, Common Sense Media</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="RLoKtb4c4W0" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/9/93/21JumpStreetfilm.jpg" width="220" height="342">
-    <h4>21 JUMP STREET</h4>
-    <h4>(2012)</h4>
-    <p><b>85% Rotten Tomatoes</b></p>
-    <p><i>'A smart, affectionate satire of '80s nostalgia and teen movie tropes.'</i></p>
-    <p><small>Critics' consensus, Rotten Tomatoes</small></p>
-</div>
-
-<div class="col-md-5 col-lg-3 movie-tile text-center" data-trailer-youtube-id="lB95KLmpLR4" data-toggle="modal" data-target="#trailer">
-    <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Social_network_film_poster.jpg" width="220" height="342">
-    <h4>THE SOCIAL NETWORK</h4>
-    <h4>(2010)</h4>
-    <p><b>96% Rotten Tomatoes</b></p>
-    <p><i>'The tale of how Mark Zuckerberg hit on the idea of Facebook is a riveting movie about friendshipand greed.'</i></p>
-    <p><small>The Guardian</small></p>
-</div>
-
+      {movie_tiles}
     </div>
   </body>
 </html>
+'''
+
+# HTML template for each movie tile
+movie_tile_content = '''
+<div class="col-md-5 col-lg-3 movie-tile text-center"
+data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal"
+data-target="#trailer">
+    <img src="{poster_image_url}" width="220" height="342">
+    <h4>{movie_title}</h4>
+    <h4>{movie_year}</h4>
+    <p><b>{movie_rating}</b></p>
+    <p><i>{movie_review}</i></p>
+    <p><small>{movie_reviewer}</small></p>
+</div>
+'''
+
+
+def create_movie_tiles_content(movies):
+    # The HTML content for this section of the page
+    content = ''
+    for movie in movies:
+        # Extract the youtube ID from the url
+        youtube_id_match = re.search(r'(?<=v=)[^&#]+',
+                                     movie.trailer_youtube_url)
+        youtube_id_match = youtube_id_match or re.search(r'(?<=be/)[^&#]+',
+                                                         movie.trailer
+                                                         _youtube_url)
+        trailer_youtube_id = youtube_id_match.group(0)
+        if youtube_id_match else None
+
+        # Append the tile for the movie with its content filled in
+        content += movie_tile_content.format(
+            movie_title=movie.title,
+            movie_year=movie.year,
+            movie_rating=movie.rating,
+            movie_review=movie.review,
+            movie_reviewer=movie.reviewer,
+            poster_image_url=movie.poster_image_url,
+            trailer_youtube_id=trailer_youtube_id
+        )
+    return content
+
+
+def open_movies_page(movies):
+    # Create or overwrite the output file
+    output_file = open('fresh_tomatoes.html', 'w')
+
+    # Replace the placeholder for the movie tiles with the actual dynamically
+    # generated content
+    rendered_content = main_page_content.format
+    (movie_tiles=create_movie_tiles_content(movies))
+
+    # Output the file
+    output_file.write(main_page_head + rendered_content)
+    output_file.close()
+
+    # Open the output file in the browser
+    url = os.path.abspath(output_file.name)
+    webbrowser.open('file://' + url, new=2)  # Open in a new tab, if possible
